@@ -43,9 +43,8 @@ async def boss_status_update(boss_channel):
         name = name.replace(" (Field Boss)", '')
         name = name.replace(" aka Bastard Bheg", '')
         if value.in_window == True:
-            inwindowmsg += "%-20s %-50s\n" % (name, " | In Window: " + str(
-                datetime.datetime.strptime(value.dt_first.strftime("%H:%M"), "%H:%M")) + " - " + str(
-                datetime.datetime.strptime(value.dt_last.strftime("%H:%M"), "%H:%M")))
+            inwindowmsg += "%-20s %-50s\n" % (name, " | In Window: " + "%s:%s" % (value.dt_first.hour,value.dt_first.minute) + " - " +
+                "%s:%s" % (value.dt_last.hour, value.dt_last.minute))
         else:
             msg += "%-20s %-50s\n" % (name, " | Time to Window: " + str(value.time_to_window))
     try:
