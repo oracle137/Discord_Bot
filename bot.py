@@ -63,7 +63,7 @@ async def boss_status_update(boss_channel):
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
-    bot.loop.create_task(boss_status_channel())
+    await boss_status_channel()
 
 
 @bot.command()
