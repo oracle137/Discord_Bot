@@ -4,6 +4,7 @@ import discord
 from discord.ext import commands
 import datetime
 import webscrapper
+import pickle
 
 
 bot = commands.Bot(command_prefix='!?', description='Ghosts Bot')
@@ -24,14 +25,18 @@ def to_lower(argument):
     return argument.lower()
 
 
-async def boss_status_channel():
-    while True:
-        print("Refreshing boss status channel", datetime.datetime.now())
+async def my_background_task():
+    await bot.wait_until_ready()
+    counter = 0
+    while not bot.is_closed:
+        counter += 1
+        print("Refreshing boss status channel", counter, datetime.datetime.now())
         channels = bot.get_all_channels()
         for channel in channels:
             if channel.name == "boss-status":
                 await boss_status_update(channel)
-        await asyncio.sleep(60)
+        await asyncio.sleep(60) # task runs every 60 seconds
+
 
 async def boss_status_update(boss_channel):
     bosses = webscrapper.start()
@@ -63,7 +68,6 @@ async def boss_status_update(boss_channel):
 async def on_ready():
     print('Logged in as')
     print(bot.user.name)
-    await boss_status_channel()
 
 
 @bot.command()
@@ -73,7 +77,7 @@ async def hello():
 
 
 @bot.command()
-async def fs(*,arg: to_lower):
+async def fs(ctx,arg: to_lower):
     words = arg.split()
     msg = "Start at " + str(failstack[grades[words[0]]].get(words[1])- startbelow[grades[words[0]]]) + " and max chance at " + str(failstack[grades[words[0]]].get(words[1]))
     await bot.say(msg)
@@ -89,4 +93,5 @@ async def error(error,ctx):
 
 if __name__ == '__main__':
     key = sys.argv[1]
+    bot.loop.create_task(my_background_task())
     bot.run(key)
