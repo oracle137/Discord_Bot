@@ -60,6 +60,5 @@ def refresh_bosses(bosses):
 
 def start():
     bosses = {}
-    print("Refreshing Boss")
     refresh_bosses(bosses)
     return bosses
